@@ -1,8 +1,9 @@
 import paramiko
+import socket
 
 IPS_FILE = open("ips.txt", "r")
 
-EXECUTE_FILE_PATH = "execute.sh"
+EXECUTE_FILE_PATH = "set_dpid.sh"
 
 USERNAME = "pi"
 PASSWORD = "piswitch"
@@ -27,10 +28,14 @@ for line in IPS_FILE:
 
     print()
     print(ip)
-    stdin, stdout, stderr = ssh_client.exec_command("sudo bash ./execute.sh", get_pty=True)
-    print("STDOUT:")
-    print(stdout.read().decode("utf-8"))
-    print("STDERR:")
-    print(stderr.read().decode("utf-8"))
-    print("---------------------------------------------------\n")
+    try:
+        stdin, stdout, stderr = ssh_client.exec_command("sudo bash ./execute.sh " + ip.split(".")[-1].zfill(16),
+                                                        get_pty=True, timeout=4)
+        print("STDOUT:")
+        print(stdout.read().decode("utf-8"))
+        print("STDERR:")
+        print(stderr.read().decode("utf-8"))
+        print("---------------------------------------------------\n")
+    except socket.timeout:
+        print("timeout")
 
