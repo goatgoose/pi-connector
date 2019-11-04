@@ -3,7 +3,7 @@ import socket
 
 IPS_FILE = open("ips.txt", "r")
 
-EXECUTE_FILE_PATH = "set_dpid.sh"
+EXECUTE_FILE_PATH = "execute.sh"
 
 USERNAME = "pi"
 PASSWORD = "piswitch"
@@ -30,7 +30,7 @@ for line in IPS_FILE:
     print(ip)
     try:
         stdin, stdout, stderr = ssh_client.exec_command("sudo bash ./execute.sh " + ip.split(".")[-1].zfill(16),
-                                                        get_pty=True, timeout=4)
+                                                        get_pty=True, timeout=10)
         print("STDOUT:")
         print(stdout.read().decode("utf-8"))
         print("STDERR:")
